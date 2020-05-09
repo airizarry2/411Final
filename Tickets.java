@@ -27,6 +27,7 @@ public class Tickets {
 	private Date start_Date;
 	private Date end_Date;
 	private String ticket_descrip;
+	private String status;
 	//Getters and Setters
 	
 	//id getter and setter
@@ -63,9 +64,13 @@ public class Tickets {
 		this.ticket_descrip= ticket_descrip;
 	}
 	
+	public String getStatus() {
+		return this.status;
+	}
 	
-	
-	
+	public void setStatus(String status) {
+		this.status= status;
+	}
 	
 	
 }
