@@ -1,5 +1,7 @@
 //Author: Anthony Irizarry
 //Date: 4/16/2020
+import java.sql.Connection;
+import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
@@ -35,6 +37,7 @@ public class Dao {
                     " ticket_descrip VARCHAR (255), " +
                     " start_date DATE, " +
                     " end_date DATE, " +
+                    "status VARCHAR (20), " + 
                     " PRIMARY KEY ( tid ))";
 
         	String sql2 = "CREATE TABLE aIriz_users" +
@@ -90,10 +93,6 @@ public class Dao {
     	
         for (int i = 0; i < login.size(); ++i) {
 
-    	
-    	
-    	
-    	
     	 sql2= "INSERT INTO aIriz_users(username,password)" +
          		"VALUES (' "+ login.get(i).getusername()+" ',' "+login.get(i).getpassword()+" ')";
     	
@@ -173,4 +172,46 @@ public class Dao {
 }
 
     }
+    
+    
+public void updateRecords(String ticket_descrip) {
+	try {
+	    
+    // Execute update  query
+    System.out.println("Creating update statement...");
+    stmt = conn.connect().createStatement();
+    String sql = "UPDATE airiz_tickets1" +
+                 "SET ticket_descrip = ‘Can’t win ‘’em all’ WHERE tid in (10, 11)";
+    stmt.executeUpdate(sql);
+
+	} catch (SQLException e) {
+		
+		e.printStackTrace();
+	}
+}
+
+
+
+
+
+public ResultSet checkUser(String password, String username) {
+	try {
+	stmt = conn.connect().createStatement();
+    String queryString = "SELECT username, password FROM aIriz_users where username=? and password=?";
+	PreparedStatement ps;
+	ResultSet results = null;
+	
+		// set up prepared statements to execute query string cleanly and safely
+		ps = (PreparedStatement)conn.connect().prepareStatement(queryString);
+		ps.setString(1, username);
+		ps.setString(2, password);
+		results = ps.executeQuery();
+		return results;
+	} catch (SQLException e1) {
+		e1.printStackTrace();
+	}
+	return null;
+}
+
+
 }
