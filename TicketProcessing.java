@@ -87,6 +87,9 @@ public class TicketProcessing extends JFrame implements ActionListener{
 			String num = 
 					JOptionPane.showInputDialog(null, "Enter the ticket ID you wish to delete: ");
 			dao.deleteRecords(Integer.parseInt(num));
+			
+			String string1 = JOptionPane.showInputDialog(null, "Enter updated ticket description: ");
+			dao.updateRecords(string1);
 		}else {
 			String ticket = 
 					JOptionPane.showInputDialog(null, "What seems to be the issue today?:  ");
