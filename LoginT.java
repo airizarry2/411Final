@@ -15,7 +15,7 @@ import java.util.Scanner;
 
 public class LoginT {
 
-	//array of Bankrecords objects
+
 	static Tickets robjs[] = new Tickets[10];
 	
 	//arraylist to hold spreadsheet rows and columns
@@ -25,6 +25,7 @@ public class LoginT {
 	//Instance Variables
 	private String username;
 	private String password;
+	private boolean role;
 	//Getters and Setters
 	
 	//id getter and setter
@@ -42,6 +43,14 @@ public class LoginT {
 	
 	public void setpassword(String password) {
 		this.password= password;
+	}
+	
+	public void setRole(boolean role) {
+		this.role=role;
+	}
+	
+	public boolean getRole() {
+		return this.role;
 	}
 	
 	
