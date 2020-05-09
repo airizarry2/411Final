@@ -68,16 +68,37 @@ public class TicketProcessing extends JFrame implements ActionListener{
 	String pass = 
 			JOptionPane.showInputDialog(null, "Enter Your Password: ");
 	
+	ResultSet rs= dao.checkUser(pass, user);
+	try {
+	if (rs.next()) {   // verify if a record match exists
+		JOptionPane.showMessageDialog(null, "Username and Password exists");
+		
+		// open up ticketsGUI file upon successful login
+		String ticket = 
+				JOptionPane.showInputDialog(null, "What seems to be the issue today?:  ");
+		obj1.setTick(ticket); // establish role as
+			// regular user via					// constructor call
+	} 
+	else {
+		JOptionPane.showMessageDialog(null, "Please check Username and Password ");
+	}
+
+	}
+	catch(SQLException e1) {
+		e1.printStackTrace();
+	} 
+		
+	
+	
+	
 	if (user.equals("admin") && pass.equals("password")) {
 		String num = 
 				JOptionPane.showInputDialog(null, "Enter the ticket ID you wish to delete: ");
 		dao.deleteRecords(Integer.parseInt(num));
 	}
-	else  {
-		String ticket = 
-				JOptionPane.showInputDialog(null, "What seems to be the issue today?:  ");
-		obj1.setTick(ticket);
-	}
+	
+		
+	
 
     
     
@@ -90,7 +111,7 @@ public class TicketProcessing extends JFrame implements ActionListener{
 	//Tickets br= new Tickets();
 	
 	//dao.createTable();
-	dao.insertRecordsT(login);
+	//dao.insertRecordsT(login);
 	dao.insertRecords(ticks);//perform inserts
 	//ResultSet rs= dao.retrieveRecords();//fill result set object
 	
