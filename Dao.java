@@ -5,6 +5,8 @@ import java.sql.SQLException;
 import java.sql.Statement;
 import java.util.ArrayList;
 
+import javax.swing.JOptionPane;
+
 
 public class Dao {
     //Declare DB objects 
@@ -140,14 +142,35 @@ public class Dao {
         	e.printStackTrace();
         }
         
-        
-        
-        
-        
         return rs;
     }
 
+    
+    public void deleteRecords (int tid) {
+    	try {
+    
+    	// Execute delete  query
+        System.out.println("Creating statement...");
+        stmt = conn.connect().createStatement();
+        String sql = "DELETE FROM aIriz_tickets1  " +
+                     "WHERE tid = " + tid ;
+      
+       int response = JOptionPane.showConfirmDialog(null, "Delete ticket # " + tid + "?",
+                                 "Confirm",  JOptionPane.YES_NO_OPTION, 
+                                 JOptionPane.QUESTION_MESSAGE);
+       if (response == JOptionPane.NO_OPTION) {
+         System.out.println("No record deleted");
+      } else if (response == JOptionPane.YES_OPTION) {
+        stmt.executeUpdate(sql);
+        System.out.println("Record deleted");
+      } else if (response == JOptionPane.CLOSED_OPTION) {
+        System.out.println("Request cancelled");
+      }
 
+} catch (SQLException e) {
+	
+	e.printStackTrace();
+}
 
-
+    }
 }
