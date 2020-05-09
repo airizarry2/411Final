@@ -197,7 +197,7 @@ public void updateRecords(String ticket_descrip) {
 public ResultSet checkUser(String password, String username) {
 	try {
 	stmt = conn.connect().createStatement();
-    String queryString = "SELECT username, password FROM aIriz_users where username=? and password=?";
+    String queryString = "SELECT username, password, Role FROM aIriz_users where username=? and password=?";
 	PreparedStatement ps;
 	ResultSet results = null;
 	
