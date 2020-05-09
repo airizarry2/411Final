@@ -36,8 +36,8 @@ public class Dao {
                     " PRIMARY KEY ( tid ))";
 
         	String sql2 = "CREATE TABLE aIriz_users" +
-        				"username VARCHAR(20) " +
-        				"password VARCHAR (20) ";
+        				" (username VARCHAR (20), " +
+        				" password VARCHAR (20))";
             stmt.executeUpdate(sql);
             stmt.executeUpdate(sql2);
             System.out.println("Created table in given database...");
@@ -57,7 +57,7 @@ public class Dao {
             System.out.println("Inserting records into the table...");
             stmt = conn.connect().createStatement();
             String sql = null;
-
+            
             // Include all object data to the database table
             for (int i = 0; i < ticks.size(); ++i) {
 
@@ -66,11 +66,11 @@ public class Dao {
 
                 sql = "INSERT INTO aIriz_tickets1(tid,start_Date, end_Date, ticket_descrip) " +
                 	       "VALUES (' "+ticks.get(i).gettid()+" ', ' "+ticks.get(i).getsDate()+" ', ' "+ticks.get(i).geteDate()+" ',' "+ticks.get(i).getTick()+" ' )";
-                sql2= "INSERT INTO aIriz_users(username,password)" +
-                		"VALUES (' "+
+               
                 stmt.executeUpdate(sql);
-                stmt.executeUpdate(sql2);
             }
+            
+            
             System.out.println("Records inserted into the table...");
             conn.connect().close();
         } catch (SQLException se) {
@@ -78,6 +78,33 @@ public class Dao {
         }
     }
 
+    public void insertRecordsT(ArrayList <LoginT> login) {
+    	try {
+    	System.out.println("Connecting to a selected database for Inserts");
+    	System.out.println("Connected database successfully...");
+        System.out.println("Inserting records into the table...");
+        stmt = conn.connect().createStatement();
+        String sql2 = null;
+    	
+        for (int i = 0; i < login.size(); ++i) {
+
+    	
+    	
+    	
+    	
+    	 sql2= "INSERT INTO aIriz_users(username,password)" +
+         		"VALUES (' "+ login.get(i).getusername()+" ',' "+login.get(i).getpassword()+" ')";
+    	
+    	 stmt.executeUpdate(sql2);
+        }
+    	 System.out.println("Records inserted into the table...");
+         conn.connect().close();
+     } catch(SQLException se) {
+         se.printStackTrace();
+     }
+    
+    }
+    
 
     public ResultSet retrieveRecords() {
         ResultSet rs = null;
