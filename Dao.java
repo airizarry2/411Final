@@ -1,12 +1,10 @@
 //Author: Anthony Irizarry
-//Date: 4/16/2020
-import java.sql.Connection;
+//Date: 5/9/2020
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
 import java.util.ArrayList;
-
 import javax.swing.JOptionPane;
 
 
@@ -15,12 +13,12 @@ public class Dao {
     DBConnect conn = null;
     Statement stmt = null;
 
-    // constructor
-    public Dao() { //create db object instance
+    //Constructor
+    public Dao() { //create DB object instance
         conn = new DBConnect();
     }
 
-
+    //Method creates tables in the database
     public void createTable() {
         try {
             // Open a connection
@@ -32,6 +30,7 @@ public class Dao {
 
             stmt = conn.connect().createStatement();
 
+            //Ticket table creation
             String sql = "CREATE TABLE aIriz_tickets1" +
                     "(tid INTEGER not NULL AUTO_INCREMENT, " +
                     " ticket_descrip VARCHAR (255), " +
@@ -39,21 +38,22 @@ public class Dao {
                     " end_date DATE, " +
                     "status VARCHAR (20), " + 
                     " PRIMARY KEY ( tid ))";
-
+            
+            //User table creation
         	String sql2 = "CREATE TABLE aIriz_users" +
         				" (username VARCHAR (20), " +
         				" password VARCHAR (20))";
             stmt.executeUpdate(sql);
             stmt.executeUpdate(sql2);
             System.out.println("Created table in given database...");
-            conn.connect().close(); //close db connection 
+            conn.connect().close(); //close DB connection 
         } catch (SQLException se) {
             // Handle errors for JDBC
             se.printStackTrace();
         }
     }
 
-    // INSERT INTO METHOD
+    //Method inserts ticket records into respective database
     public void insertRecords(ArrayList <Tickets> ticks) {
         try {
             // Execute a query
@@ -65,13 +65,9 @@ public class Dao {
             
             // Include all object data to the database table
             for (int i = 0; i < ticks.size(); ++i) {
-
-                // finish string assignment to insert all object data 
-               
-
-                sql = "INSERT INTO aIriz_tickets1(tid,start_Date, end_Date, ticket_descrip) " +
-                	       "VALUES (' "+ticks.get(i).gettid()+" ', ' "+ticks.get(i).getsDate()+" ', ' "+ticks.get(i).geteDate()+" ',' "+ticks.get(i).getTick()+" ' )";
-               
+         
+                sql = "INSERT INTO aIriz_tickets1(tid,start_Date, end_Date, ticket_descrip, status) " +
+                	       "VALUES (' "+ticks.get(i).gettid()+" ', ' "+ticks.get(i).getsDate()+" ', ' "+ticks.get(i).geteDate()+" ',' "+ticks.get(i).getTick()+" ',' "+ticks.get(i).getStatus()+" ')";
                 stmt.executeUpdate(sql);
             }
             
@@ -82,7 +78,7 @@ public class Dao {
             se.printStackTrace();
         }
     }
-
+    //Method inserts Users into database with username and password (not in use currently)
     public void insertRecordsT(ArrayList <LoginT> login) {
     	try {
     	System.out.println("Connecting to a selected database for Inserts");
@@ -106,9 +102,9 @@ public class Dao {
     
     }
     
-
+    //Method retrieves records from database to display onto console
     public ResultSet retrieveRecords() {
-        ResultSet rs = null;
+        ResultSet rs1 = null;
         System.out.println("Connecting to a selected database for Record retrievals...");
         try {
         	stmt = conn.connect().createStatement();
@@ -121,10 +117,10 @@ public class Dao {
         	
         }
         
-        String sql = "SELECT id, income, pep from a_Iriz_tab11 order by pep desc";
+        String sql = "SELECT tid,start_Date, end_Date, ticket_descrip, status from aIriz_tickets1 order by tid asc";
         
         try {
-        	rs = stmt.executeQuery(sql);
+        	rs1 = stmt.executeQuery(sql);
         	System.out.println("Records retrieved from the database...");
         	System.out.println("Creating Select statement...");
         }
@@ -141,10 +137,10 @@ public class Dao {
         	e.printStackTrace();
         }
         
-        return rs;
+        return rs1;
     }
 
-    
+    //Method deletes records from respective database
     public void deleteRecords (int tid) {
     	try {
     
@@ -173,16 +169,37 @@ public class Dao {
 
     }
     
+//Method updates ticket status (admin only)
+public void updateStatus (String status, int tid) {
+    	try {
+    		// Execute update  query
+    	    System.out.println("Creating update statement...");
+    	    stmt = conn.connect().createStatement();
+    	    String sql = "UPDATE airiz_tickets1 SET status = '"+status+"' WHERE tid=?";
+    	    PreparedStatement ps1;
+    	    ps1 = (PreparedStatement)conn.connect().prepareStatement(sql);
+    	    ps1.setInt(1, tid);
+    	    ps1.executeUpdate();
+    	}
+    	
+    	catch(SQLException e) {
+    		e.printStackTrace();
+    	
+    	}
+    }
     
-public void updateRecords(String ticket_descrip) {
+//Method updates ticket description (admin only)
+public void updateRecords(String ticket_descrip, int tid) {
 	try {
 	    
     // Execute update  query
     System.out.println("Creating update statement...");
     stmt = conn.connect().createStatement();
-    String sql = "UPDATE airiz_tickets1" +
-                 "SET ticket_descrip = ‘Can’t win ‘’em all’ WHERE tid in (10, 11)";
-    stmt.executeUpdate(sql);
+    String sql = "UPDATE airiz_tickets1 SET ticket_descrip = '"+ticket_descrip+"' WHERE tid=?";
+    PreparedStatement ps1;
+    ps1 = (PreparedStatement)conn.connect().prepareStatement(sql);
+    ps1.setInt(1, tid);
+    ps1.executeUpdate();
 
 	} catch (SQLException e) {
 		
@@ -193,7 +210,7 @@ public void updateRecords(String ticket_descrip) {
 
 
 
-
+//Method checks to see if user is in the User database and allows for authentication 
 public ResultSet checkUser(String password, String username) {
 	try {
 	stmt = conn.connect().createStatement();
@@ -211,7 +228,27 @@ public ResultSet checkUser(String password, String username) {
 		e1.printStackTrace();
 	}
 	return null;
+	
 }
 
+
+//Method displays results of database onto console
+public static void displayResults(ResultSet rs1, ArrayList<String> ticks) throws SQLException {
+    ArrayList<String> headerFormat = new ArrayList<String>();
+    System.out.print("\n");
+    for(int i = 0; i < ticks.size(); i++) {
+        headerFormat.add("%-" + (ticks.get(i).length() + 8) + "s");
+        System.out.format(headerFormat.get(i), ticks.get(i));
+    }
+    System.out.print("\n");
+
+    while (rs1.next()) {
+        for(int i = 0; i < ticks.size(); i++) {
+            System.out.format(headerFormat.get(i), rs1.getString(ticks.get(i)));
+        }
+        System.out.print("\n");
+    }
+    System.out.print("\n");
+}
 
 }
