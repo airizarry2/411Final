@@ -8,6 +8,7 @@ import java.sql.Date;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.ArrayList;
+import java.util.List;
 import java.util.Scanner;
 
 import javax.swing.JButton;
@@ -73,9 +74,22 @@ public class TicketProcessing extends JFrame implements ActionListener{
 	
 	boolean admin = false; 
 	
+	
+    ArrayList<String> array1= new ArrayList<>();	
+    array1.add("tid");
+    array1.add("start_Date");
+    array1.add("end_Date");
+    array1.add("ticket_descrip");
+    array1.add("status");
+    
+   
+    ResultSet rs1= dao.retrieveRecords();
+    
 	try {
 		
-	
+		
+		
+		
 		
 	if (rs.next()) {
 		admin = rs.getBoolean("Role");
@@ -84,20 +98,54 @@ public class TicketProcessing extends JFrame implements ActionListener{
 		JOptionPane.showMessageDialog(null, "Username and Password exists");
 
 		if (admin) {
-			String num = 
-					JOptionPane.showInputDialog(null, "Enter the ticket ID you wish to delete: ");
-			dao.deleteRecords(Integer.parseInt(num));
 			
-			String string1 = JOptionPane.showInputDialog(null, "Enter updated ticket description: ");
-			dao.updateRecords(string1);
+			int question = 
+					JOptionPane.showConfirmDialog(null, "Do you want to delete a ticket?", "Close?",  JOptionPane.YES_NO_OPTION);
+			if (question == JOptionPane.YES_OPTION)
+			{
+				String num = 
+						JOptionPane.showInputDialog(null, "Enter the ticket ID you wish to delete: ");
+				dao.deleteRecords(Integer.parseInt(num));
+			}
+			
+			int question5 = 
+					JOptionPane.showConfirmDialog(null, "Do you want to update a ticket status?", "Close?",  JOptionPane.YES_NO_OPTION);
+			if (question5 == JOptionPane.YES_OPTION) {
+				String ticketnum1 = 
+						JOptionPane.showInputDialog(null, "Enter the ticket id of such ticket:  ");
+				String string2 = JOptionPane.showInputDialog(null, "Enter updated ticket status (Closed, open, reopened): ");
+				dao.updateStatus(string2, Integer.parseInt(ticketnum1));
+			}
+			
+			
+			int question1 = 
+					JOptionPane.showConfirmDialog(null, "Do you want to update a ticket?", "Close?",  JOptionPane.YES_NO_OPTION);
+			if (question1 == JOptionPane.YES_OPTION) {
+				String ticketnum = 
+						JOptionPane.showInputDialog(null, "Enter the ticket id of such ticket:  ");
+						
+				String string1 = JOptionPane.showInputDialog(null, "Enter updated ticket description: ");
+					dao.updateRecords(string1, Integer.parseInt(ticketnum));
+			}
+			int question3 = 
+					JOptionPane.showConfirmDialog(null, "Do you want to view the records in a table in the console?", "Close?",  JOptionPane.YES_NO_OPTION);
+			if (question3 == JOptionPane.YES_OPTION) {
+				dao.retrieveRecords();
+				dao.displayResults(rs1, array1 );
+			}
+			
+			
 		}else {
 			String ticket = 
 					JOptionPane.showInputDialog(null, "What seems to be the issue today?:  ");
-			obj1.setTick(ticket); // establish role as
+			
+			obj1.setTick(ticket);
+			obj1.setStatus("Open");
+			dao.insertRecords(ticks);
+
 		}
-		// open up ticketsGUI file upon successful login
 		
-			// regular user via					// constructor call
+		
 	} 
 	else {
 		JOptionPane.showMessageDialog(null, "Please check Username and Password ");
@@ -108,18 +156,11 @@ public class TicketProcessing extends JFrame implements ActionListener{
 		e1.printStackTrace();
 	} 
 		
-	
-	
-	
-	
-		
-	
 
     
-    
     ticks.add(obj1);
-    obj1.setsDate(new Date(1588896000*1000));
-    obj1.seteDate(new Date(1588993449*1000));
+    obj1.setsDate(new Date(	System.currentTimeMillis()));
+    obj1.seteDate(new Date(	System.currentTimeMillis()+604800000));
     login.add(obj2);
     obj2.setusername(user);
     obj2.setpassword(pass);
@@ -128,7 +169,7 @@ public class TicketProcessing extends JFrame implements ActionListener{
 	
 	//dao.createTable();
 	//dao.insertRecordsT(login);
-	dao.insertRecords(ticks);//perform inserts
+	//perform inserts
 	//ResultSet rs= dao.retrieveRecords();//fill result set object
 	
 	
