@@ -1,21 +1,13 @@
-
-import java.io.BufferedReader;
-import java.io.File;
-import java.io.FileNotFoundException;
-import java.io.FileReader;
-import java.io.IOException;
 import java.sql.Date;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.List;
-import java.util.Scanner; 
 
 //Author: Anthony Irizarry
-//Date: 2/27/2020
-
+//Date: 5/9/2020
+//Purpose: Creates an arraylist for the objects of the Tickets class which are a ticket ID, start date, end date, ticket description and ticket status
 public class Tickets {
 
-	//array of Bankrecords objects
+	//array of Ticket objects
 	static Tickets robjs[] = new Tickets[10];
 	
 	//arraylist to hold spreadsheet rows and columns
@@ -28,9 +20,10 @@ public class Tickets {
 	private Date end_Date;
 	private String ticket_descrip;
 	private String status;
-	//Getters and Setters
 	
-	//id getter and setter
+	
+	//Getters and Setters
+	//Ticket ID
 	public int gettid() {
 		return this.tid;
 	}
@@ -39,6 +32,7 @@ public class Tickets {
 		this.tid= tid;
 	}
 	
+	//Ticket Start date
 	public Date getsDate() {
 		return this.start_Date;
 	}
@@ -47,7 +41,7 @@ public class Tickets {
 		this.start_Date= start_Date;
 	}
 	
-
+	//Ticket End date
 	public Date geteDate() {
 		return this.end_Date;
 	}
@@ -56,6 +50,7 @@ public class Tickets {
 		this.end_Date= end_Date;
 	}
 	
+	//Ticket description
 	public String getTick() {
 		return this.ticket_descrip;
 	}
@@ -64,6 +59,7 @@ public class Tickets {
 		this.ticket_descrip= ticket_descrip;
 	}
 	
+	//Ticket Status 
 	public String getStatus() {
 		return this.status;
 	}
